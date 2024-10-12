@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:lets_chat/Routes/app_router.dart';
+import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/screens/registration_page.dart';
 import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/util_functions.dart';
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const RegistrationPage(),
+      initialRoute: AppRouter.initial,
+      getPages: AppRouter.routes,
+      initialBinding: AuthBinding(),
     );
   }
 }
