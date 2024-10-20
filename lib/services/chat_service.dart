@@ -5,7 +5,7 @@ class ChatService {
 
   void connect() {
     socket = IO.io(
-        'ws://10.0.2.2:2525',
+        'https://lets-chat-backend-5wa8.onrender.com',
         IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {'autoconnect': false}).build());
     socket!.connect();

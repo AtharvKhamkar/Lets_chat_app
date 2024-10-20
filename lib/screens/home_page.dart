@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lets_chat/services/chat_service.dart';
+import 'package:lets_chat/services/shared_preference_service.dart';
+import 'package:lets_chat/utils/text_styles.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GetIt _getIt = GetIt.instance;
   late ChatService _chatService;
+  String? _userName;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -19,6 +23,16 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _chatService = _getIt.get<ChatService>();
     _chatService.connect();
+    _loadUserDetails();
+  }
+
+  Future<void> _loadUserDetails()async{
+    SharedPreferenceService _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
+
+    setState(() {
+      _userName = _sharedPref.prefs?.getString(SharedPreferenceService.userNameKey);
+      _loading = false;
+    });
   }
 
   @override
@@ -27,7 +41,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Lets_Chat'),
       ),
-      body: Container(),
+      body: Center(
+        child: _loading ? const CircularProgressIndicator.adaptive() : Text('Username : $_userName',style: TextStyles.headLine1,),
+      )
     );
   }
 }

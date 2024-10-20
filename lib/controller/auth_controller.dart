@@ -51,6 +51,27 @@ class AuthController extends GetxController with StateMixin<dynamic>{
 
   }
 
+  void login()async{
+    if(isLoading.value) return;
+    isLoading(true);
+    update();
+
+    final result = await _authRepo.loginUser(emailController.text, passwordController.text);
+
+    debugPrint('Result of the login process :: ${result}');
+
+    if(result != null){
+      update();
+      reset();
+      Get.offAllNamed('/home-screen');
+    }else{
+      Get.snackbar('Login process failed', 'Please try again after some time');
+    }
+    isLoading(false);
+    update();
+
+  }
+
   void reset(){
     usernameController.clear();
     emailController.clear();

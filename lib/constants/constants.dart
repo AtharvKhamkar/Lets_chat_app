@@ -1,3 +1,3 @@
 class Constants {
-  static const BASE_URL = 'http://localhost:2525/v1/';
+  static const BASE_URL = 'https://lets-chat-backend-5wa8.onrender.com/v1/';
 }
