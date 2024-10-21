@@ -42,7 +42,7 @@ class AuthController extends GetxController with StateMixin<dynamic>{
     if(result != null){
       update();
       reset();
-      Get.offAllNamed('/home-screen');
+      Get.offAllNamed('/login');
     }else{
       Get.snackbar('Registration process failed', 'Please try again after some time');
     }

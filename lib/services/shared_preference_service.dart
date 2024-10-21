@@ -18,14 +18,30 @@ class SharedPreferenceService {
   static const String userIdKey = 'user_id';
   static const String userNameKey = 'user_name';
   static const String emailKey = 'email';
+  static const String passwordKey = 'password';
 
   //Function to save user details after the login
-  Future<bool> saveUserLoginDetails( String user_name, String email)async{
+  Future<bool> saveUserRegistrationDetails( String user_name, String email)async{
     const String FUNCTION_NAME = 'SAVE_USER_LOGIN_DETAILS';
     
     try {
+      await clearUserData();
       await prefs!.setString(userNameKey, user_name);
       await prefs!.setString(emailKey, email);
+      return true;
+    } catch (e) {
+      debugPrint('Error in the $SERVICE_NAME :: $FUNCTION_NAME :: $e');
+      return false;
+    }
+  }
+
+  //Function to save user email and password
+  Future<bool> saveUserCredentials(String email, String password)async{
+    const String FUNCTION_NAME = 'SAVE_USER_CREDENTIALS';
+    try {
+      await clearUserData();
+      await prefs!.setString(emailKey, email);
+      await prefs!.setString(passwordKey, password);
       await prefs!.setBool(isLoggedInKey, true);
       return true;
     } catch (e) {

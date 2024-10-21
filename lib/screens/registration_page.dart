@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
+import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:lets_chat/utils/validation.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 import 'package:lets_chat/widgets/custom_form_button.dart';
@@ -15,7 +17,20 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final GetIt _getIt = GetIt.instance;
   var registrationFormKey = GlobalKey<FormState>();
+  late SharedPreferenceService _sharedPref;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeSharedPreferences();
+  }
+
+  Future<void> initializeSharedPreferences()async{
+    _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
+  }
  
   @override
   Widget build(BuildContext context) {
@@ -75,8 +90,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           listOfAutofill: const [AutofillHints.password],
                         ),
                         Spacer(),
-                        CustomFormButton(innerText: 'Register', onPressed: () {
+                        CustomFormButton(innerText: 'Register',isLoading: controller.isLoading.value, onPressed: () async{
                           controller.register();
+                          _sharedPref.saveUserRegistrationDetails(controller.usernameController.text, controller.emailController.text);
                         })
                       ],
                     ),

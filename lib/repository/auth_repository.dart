@@ -29,7 +29,7 @@ class AuthRepository {
 
   Future? loginUser(String email,String password)async{
     try {
-      final loginData = {
+      Map<String,dynamic> loginData = {
         "email":email.trim(),
         "password":password.trim()
       };

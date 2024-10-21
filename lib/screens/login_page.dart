@@ -94,8 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                         const Spacer(),
-                        CustomFormButton(innerText: 'Login', onPressed: () async{
-                         Future<bool> isPrefProcessSuccess =  _sharedPref.saveUserLoginDetails(controller.emailController.text, controller.usernameController.text);
+                        CustomFormButton(innerText: 'Login', isLoading: controller.isLoading.value,onPressed: () async{
+                         Future<bool> isPrefProcessSuccess =  _sharedPref.saveUserCredentials(controller.emailController.text, controller.passwordController.text);
                           if(await isPrefProcessSuccess){
                             controller.login();
                             controller.reset();
