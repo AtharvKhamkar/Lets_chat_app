@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/controller/user_controller.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:lets_chat/utils/text_styles.dart';
+import 'package:lets_chat/widgets/custom_appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +20,9 @@ class _HomePageState extends State<HomePage> {
   String? _userName;
   bool _loading = true;
 
+  final UserController controller =
+      UserController().initialized ? Get.find() : Get.put(UserController());
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +30,7 @@ class _HomePageState extends State<HomePage> {
     _chatService = _getIt.get<ChatService>();
     _chatService.connect();
     _loadUserDetails();
+    controller.getUserList();
   }
 
   Future<void> _loadUserDetails()async{
@@ -38,9 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Lets_Chat'),
-      ),
+      appBar: const CustomAppBar(title: 'Lets Chat'),
       body: Center(
         child: _loading ? const CircularProgressIndicator.adaptive() : Text('Username : $_userName',style: TextStyles.headLine1,),
       )

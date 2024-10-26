@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:lets_chat/services/api_client_service.dart';
 import 'package:flutter/material.dart';
 
