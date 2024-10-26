@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: ElevatedButton(
+      leading: Get.currentRoute != '/home-screen'? ElevatedButton(
         onPressed: () {
           Get.back();
         },
@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: Colors.white,
           size: 30,
         ),
-      ),
+      ) : null,
       actions: actions,
       title: Text(title, style: TextStyles.headLine1),
       elevation: 0,
