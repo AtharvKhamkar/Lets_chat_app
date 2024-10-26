@@ -10,7 +10,7 @@ class TextStyles {
 
   static const TextStyle headLine1 = TextStyle(
       fontFamily: 'SF Pro',
-      fontSize: 26,
+      fontSize: 24,
       fontWeight: FontWeight.w500,
       height: 18 / 13,
       color: Colors.white);

@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import 'package:lets_chat/modals/user_modal.dart';
 import 'package:lets_chat/repository/user_repository.dart';
 
 class UserController extends GetxController with StateMixin<dynamic>{
   final _userRepo = UserRepository();
-  RxList userList = [].obs;
+  RxList<User> userList = <User>[].obs;
 
   //Booleans
   var isLoading = false.obs;
@@ -18,7 +19,7 @@ class UserController extends GetxController with StateMixin<dynamic>{
     update();
 
     final result = await _userRepo.userList();
-    userList.assignAll(result);
+    userList.assignAll(result!);
 
     isLoading(false);
     update();

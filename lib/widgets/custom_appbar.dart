@@ -4,10 +4,12 @@ import 'package:lets_chat/utils/text_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final List<Widget>? actions;
 
   const CustomAppBar({
     super.key,
-    required this.title,
+    required this.title, 
+    this.actions,
   });
 
   @override
@@ -27,9 +29,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           size: 30,
         ),
       ),
+      actions: actions,
       title: Text(title, style: TextStyles.headLine1),
       elevation: 0,
       backgroundColor: Colors.transparent,
+      centerTitle: false,
     );
   }
 
