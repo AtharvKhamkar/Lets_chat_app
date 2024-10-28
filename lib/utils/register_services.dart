@@ -6,5 +6,6 @@ Future<void> registerServices() async {
   final GetIt getIt = GetIt.instance;
 
   getIt.registerLazySingleton<ChatService>(() => ChatService());
-  getIt.registerLazySingletonAsync<SharedPreferenceService>(()async => await SharedPreferenceService.getInstance());
+  getIt.registerLazySingletonAsync<SharedPreferenceService>(
+      () async => await SharedPreferenceService.getInstance());
 }

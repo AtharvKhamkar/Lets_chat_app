@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/controller/auth_controller.dart';
+import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/controller/user_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
+import 'package:lets_chat/screens/chat_page.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:lets_chat/utils/colors.dart';
@@ -20,7 +23,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GetIt _getIt = GetIt.instance;
-  late ChatService _chatService;
   String? _userName;
   bool _loading = true;
 
@@ -31,8 +33,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _chatService = _getIt.get<ChatService>();
-    _chatService.connect();
     _loadUserDetails();
     controller.getUserList();
   }
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             }
-        
+
             if (controller.userList.isEmpty) {
               return const Center(
                 child: Text(
@@ -92,12 +92,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             }
-        
+
             return ListView.builder(
               itemCount: controller.userList.length,
               itemBuilder: (context, index) {
                 User user = controller.userList[index];
-                return ChatTile(initials: user.username![0].toUpperCase(), userName: user.username!);
+                return ChatTile(
+                  receiverUser: user,
+                );
               },
             );
           },
@@ -108,28 +110,35 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ChatTile extends StatelessWidget {
-  final String initials;
-  final String userName;
-  const ChatTile({super.key, required this.initials, required this.userName});
+  final User receiverUser;
+  const ChatTile({super.key, required this.receiverUser});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: Get.height * 0.1,
-      width: Get.width,
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.blue[300],
-            child: Text(initials),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Text(userName,style: TextStyles.headLine2,)
-        ],
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => ChatPage(receiverUser: receiverUser),
+            binding: ChatBinding());
+      },
+      child: SizedBox(
+        height: Get.height * 0.1,
+        width: Get.width,
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.blue[300],
+              child: Text(receiverUser.username![0].toUpperCase()),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Text(
+              receiverUser.username!,
+              style: TextStyles.headLine2,
+            )
+          ],
+        ),
       ),
-
     );
   }
 }

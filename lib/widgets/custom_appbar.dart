@@ -8,27 +8,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppBar({
     super.key,
-    required this.title, 
+    required this.title,
     this.actions,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: Get.currentRoute != '/home-screen'? ElevatedButton(
-        onPressed: () {
-          Get.back();
-        },
-        style: const ButtonStyle(
-          backgroundColor: WidgetStateColor.transparent,
-        ),
-        iconAlignment: IconAlignment.start,
-        child: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
-          size: 30,
-        ),
-      ) : null,
+      leading: Get.currentRoute != '/home-screen'
+          ? ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              style: const ButtonStyle(
+                backgroundColor: WidgetStateColor.transparent,
+              ),
+              iconAlignment: IconAlignment.start,
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
+            )
+          : null,
       actions: actions,
       title: Text(title, style: TextStyles.headLine1),
       elevation: 0,

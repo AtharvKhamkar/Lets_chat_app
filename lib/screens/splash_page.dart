@@ -16,7 +16,8 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final GetIt _getIt = GetIt.instance;
-  final AuthController authController = AuthController().initialized ? Get.find() : Get.put(AuthController());
+  final AuthController authController =
+      AuthController().initialized ? Get.find() : Get.put(AuthController());
   late SharedPreferenceService _sharedPref;
   String? email;
   String? password;
@@ -25,13 +26,11 @@ class _SplashPageState extends State<SplashPage> {
     // TODO: implement initState
     super.initState();
     decideEntryScreen();
-
   }
 
-  Future<void> decideEntryScreen()async{
+  Future<void> decideEntryScreen() async {
     try {
-      Future.delayed(const Duration(seconds: 3),
-      ()async{
+      Future.delayed(const Duration(seconds: 3), () async {
         await loadUserCredentials();
       });
     } catch (e) {
@@ -39,27 +38,28 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
-  Future<void> loadUserCredentials()async{
+  Future<void> loadUserCredentials() async {
     try {
       _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
-    if(await _sharedPref.isLoggedIn()){
-      email = _sharedPref.prefs?.getString(SharedPreferenceService.emailKey);
-      password = _sharedPref.prefs?.getString(SharedPreferenceService.passwordKey);
-      if(email!.isNotEmpty && password!.isNotEmpty){
-        authController.emailController.text = email ?? '';
-        authController.passwordController.text = password ?? '';
-        authController.login();
-      }else{
-        Get.offAll(() =>const LoginPage(),binding: AuthBinding());
+      if (await _sharedPref.isLoggedIn()) {
+        email = _sharedPref.prefs?.getString(SharedPreferenceService.emailKey);
+        password =
+            _sharedPref.prefs?.getString(SharedPreferenceService.passwordKey);
+        if (email!.isNotEmpty && password!.isNotEmpty) {
+          authController.emailController.text = email ?? '';
+          authController.passwordController.text = password ?? '';
+          authController.login();
+        } else {
+          Get.offAll(() => const LoginPage(), binding: AuthBinding());
+        }
+      } else {
+        Get.offAll(() => const LoginPage(), binding: AuthBinding());
       }
-    }else{
-      Get.offAll(() => const LoginPage(),binding: AuthBinding());
-    }
     } catch (e) {
       debugPrint('Error in the loadUserCredentials function $e');
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +73,8 @@ class _SplashPageState extends State<SplashPage> {
             SizedBox(
               height: Get.height * 0.5,
               width: Get.width * 0.5,
-              child: Image.asset('assets/Images/messenger.png').animate().fadeIn(),
+              child:
+                  Image.asset('assets/Images/messenger.png').animate().fadeIn(),
             ),
             SizedBox(
               height: Get.height * 0.1,

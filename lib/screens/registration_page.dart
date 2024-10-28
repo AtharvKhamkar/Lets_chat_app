@@ -28,82 +28,87 @@ class _RegistrationPageState extends State<RegistrationPage> {
     initializeSharedPreferences();
   }
 
-  Future<void> initializeSharedPreferences()async{
+  Future<void> initializeSharedPreferences() async {
     _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(
-      builder: (controller) {
-        return Scaffold(
-          appBar: const CustomAppBar(title: 'Registration'),
-          body: Padding(
-            padding: EdgeInsets.symmetric(vertical: Get.height * 0.03,horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SvgPicture.asset('assets/Images/registration.svg',
+    return GetBuilder<AuthController>(builder: (controller) {
+      return Scaffold(
+        appBar: const CustomAppBar(title: 'Registration'),
+        body: Padding(
+          padding:
+              EdgeInsets.symmetric(vertical: Get.height * 0.03, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/Images/registration.svg',
                 height: Get.height * 0.25,
-                ),
-                Form(
-                  key: registrationFormKey,
-                  child: Expanded(
-                    child: Column(
-                      children: [
-                        CustomInputField2(
-                          controller: controller.usernameController,
-                          inputType: TextInputType.text,
-                          hintText: 'Enter Your Username',
-                          label: 'Username',
-                          validator: (value) {
-                            AppValidatorUtil.validateUsername(value);
-                          },
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-                          errorMessage: 'Enter valid username',
-                          listOfAutofill: const [AutofillHints.username],
-                        ),
-                       CustomInputField2(
-                          controller: controller.emailController,
-                          inputType: TextInputType.text,
-                          hintText: 'Enter Your Email',
-                          label: 'Email',
-                          validator: (value) {
-                            AppValidatorUtil.validateEmail(value);
-                          },
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-                          errorMessage: 'Enter valid username',
-                          listOfAutofill: const [AutofillHints.email],
-                        ),
-                         CustomInputField2(
-                          controller: controller.passwordController,
-                          inputType: TextInputType.text,
-                          hintText: 'Enter Your Password',
-                          label: 'Password',
-                          validator: (value) {
-                            AppValidatorUtil.validateEmpty(
-                                    value: value, message: 'Password');
-                          },
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-                          errorMessage: 'Enter valid password',
-                          listOfAutofill: const [AutofillHints.password],
-                        ),
-                        Spacer(),
-                        CustomFormButton(innerText: 'Register',isLoading: controller.isLoading.value, onPressed: () async{
-                          controller.register();
-                          _sharedPref.saveUserRegistrationDetails(controller.usernameController.text, controller.emailController.text);
-                        })
-                      ],
-                    ),
+              ),
+              Form(
+                key: registrationFormKey,
+                child: Expanded(
+                  child: Column(
+                    children: [
+                      CustomInputField2(
+                        controller: controller.usernameController,
+                        inputType: TextInputType.text,
+                        hintText: 'Enter Your Username',
+                        label: 'Username',
+                        validator: (value) {
+                          AppValidatorUtil.validateUsername(value);
+                        },
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        errorMessage: 'Enter valid username',
+                        listOfAutofill: const [AutofillHints.username],
+                      ),
+                      CustomInputField2(
+                        controller: controller.emailController,
+                        inputType: TextInputType.text,
+                        hintText: 'Enter Your Email',
+                        label: 'Email',
+                        validator: (value) {
+                          AppValidatorUtil.validateEmail(value);
+                        },
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        errorMessage: 'Enter valid username',
+                        listOfAutofill: const [AutofillHints.email],
+                      ),
+                      CustomInputField2(
+                        controller: controller.passwordController,
+                        inputType: TextInputType.text,
+                        hintText: 'Enter Your Password',
+                        label: 'Password',
+                        validator: (value) {
+                          AppValidatorUtil.validateEmpty(
+                              value: value, message: 'Password');
+                        },
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        errorMessage: 'Enter valid password',
+                        listOfAutofill: const [AutofillHints.password],
+                      ),
+                      Spacer(),
+                      CustomFormButton(
+                          innerText: 'Register',
+                          isLoading: controller.isLoading.value,
+                          onPressed: () async {
+                            controller.register();
+                            _sharedPref.saveUserRegistrationDetails(
+                                controller.usernameController.text,
+                                controller.emailController.text);
+                          })
+                    ],
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }
 

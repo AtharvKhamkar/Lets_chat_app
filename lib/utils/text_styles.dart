@@ -92,7 +92,6 @@ class TextStyles {
       height: 18 / 13,
       color: Colors.white);
 
-
   static const TextStyle errorAlertText = TextStyle(
       fontFamily: 'SF Pro',
       fontSize: 20,

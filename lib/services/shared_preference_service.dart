@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +7,7 @@ class SharedPreferenceService {
 
   SharedPreferenceService._();
 
-  static Future<SharedPreferenceService> getInstance() async{
+  static Future<SharedPreferenceService> getInstance() async {
     SharedPreferenceService instance = SharedPreferenceService._();
     instance.prefs = await SharedPreferences.getInstance();
     return instance;
@@ -21,9 +20,10 @@ class SharedPreferenceService {
   static const String passwordKey = 'password';
 
   //Function to save user details after the login
-  Future<bool> saveUserRegistrationDetails( String user_name, String email)async{
+  Future<bool> saveUserRegistrationDetails(
+      String user_name, String email) async {
     const String FUNCTION_NAME = 'SAVE_USER_LOGIN_DETAILS';
-    
+
     try {
       await clearUserData();
       await prefs!.setString(userNameKey, user_name);
@@ -36,10 +36,12 @@ class SharedPreferenceService {
   }
 
   //Function to save user email and password
-  Future<bool> saveUserCredentials(String email, String password)async{
+  Future<bool> saveUserCredentials(
+      String email, String password, String userId) async {
     const String FUNCTION_NAME = 'SAVE_USER_CREDENTIALS';
     try {
       await clearUserData();
+      await prefs!.setString(userIdKey, userId);
       await prefs!.setString(emailKey, email);
       await prefs!.setString(passwordKey, password);
       await prefs!.setBool(isLoggedInKey, true);
@@ -51,12 +53,12 @@ class SharedPreferenceService {
   }
 
   //Function to check user is logged in or not
-  Future<bool> isLoggedIn()async{
+  Future<bool> isLoggedIn() async {
     return prefs?.getBool(isLoggedInKey) ?? false;
   }
 
   //Function to clean all user data
-  Future<void> clearUserData() async{
+  Future<void> clearUserData() async {
     await prefs!.clear();
   }
 }

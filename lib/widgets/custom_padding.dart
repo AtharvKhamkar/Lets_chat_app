@@ -6,8 +6,9 @@ class CustomPadding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-    child: child,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: child,
     );
   }
 }
