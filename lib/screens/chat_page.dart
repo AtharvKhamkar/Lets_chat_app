@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
@@ -6,9 +7,11 @@ import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
+import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/util_function.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 import 'package:lets_chat/widgets/custom_padding.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatPage extends StatefulWidget {
   final User receiverUser;
@@ -46,9 +49,11 @@ class _ChatPageState extends State<ChatPage> {
     _userId = _sharedPref.prefs!.getString(SharedPreferenceService.userIdKey);
     _receiverId = widget.receiverUser.Id;
 
+    debugPrint('UserId from the initializeSharedPreferences function $_userId');
+
     if (_userId != null && _receiverId != null) {
       initializeRoom(_userId!, _receiverId!);
-      _chatService.connect(_roomId!, _userId!);
+      chatController.connectToSocket(_roomId!, _userId!);
       setState(() => _loading = false);
     }
   }
@@ -58,14 +63,28 @@ class _ChatPageState extends State<ChatPage> {
     _roomId = UtilFunction().generateChatID(uid1: userId, uid2: receiverId);
   }
 
+  void _onSendPressed(types.PartialText message) {
+    if (_roomId != null && _userId != null) {
+      chatController.sendMessage(_roomId!, _userId!, message.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: widget.receiverUser.username!),
-      body: const CustomPadding(
-          child: Column(
-        children: [],
-      )),
+      body: _userId != null
+          ? Obx(() => Chat(
+                messages: chatController.messages.toList(),
+                onSendPressed: _onSendPressed,
+                user: types.User(id: _userId!),
+              ))
+          : const Center(
+              child: Text(
+                'User Id not found',
+                style: TextStyles.defaultText,
+              ),
+            ),
     );
   }
 }
