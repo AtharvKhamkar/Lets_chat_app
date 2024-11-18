@@ -40,7 +40,7 @@ class SharedPreferenceService {
       String email, String password, String userId) async {
     const String FUNCTION_NAME = 'SAVE_USER_CREDENTIALS';
     try {
-      await clearUserData();
+      // await clearUserData();
       await prefs!.setString(userIdKey, userId);
       await prefs!.setString(emailKey, email);
       await prefs!.setString(passwordKey, password);

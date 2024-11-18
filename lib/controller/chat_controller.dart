@@ -37,19 +37,25 @@ class ChatController extends GetxController with StateMixin<dynamic> {
     return result;
   }
 
-  void connectToSocket(String roomId, String userId) {
-    _chatService.connect(roomId, userId);
+  Future<void> connectToSocket(String roomId, String userId) async {
+    debugPrint(
+        'Socket connection request started :: connectToSocket :: ChatController');
+    await _chatService.connect(roomId, userId);
+    await _chatService.joinRoom(roomId, userId);
     _chatService.messageStream.addListener(() {
       final chatHistory = _chatService.messageStream.value;
       messages.clear();
 
       for (var messageData in chatHistory) {
+        debugPrint(
+            'MessageData in the connectToSocket function is $messageData');
         final receivedMessage = types.TextMessage(
-          author: types.User(id: messageData['senderId']),
-          id: messageData['_id'],
-          text: messageData['content'],
-          createdAt:
-              DateTime.parse(messageData['timestamp']).millisecondsSinceEpoch,
+          author: types.User(id: messageData['senderId'] ?? 'unknown'),
+          id: messageData['_id'] ?? DateTime.now().toIso8601String(),
+          text: messageData['content'] ?? '[No content]',
+          createdAt: messageData['timestamp'] != null
+              ? DateTime.parse(messageData['timestamp']).millisecondsSinceEpoch
+              : DateTime.now().millisecondsSinceEpoch,
         );
         messages.add(receivedMessage);
       }

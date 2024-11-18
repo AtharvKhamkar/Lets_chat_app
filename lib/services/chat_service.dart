@@ -5,9 +5,9 @@ class ChatService {
   IO.Socket? socket;
   final messageStream = ValueNotifier<List<Map<String, dynamic>>>([]);
 
-  void connect(String roomId, String userId) {
+  Future<void> connect(String roomId, String userId) async {
     socket = IO.io(
-        'https://lets-chat-backend-5wa8.onrender.com',
+        'ws://127.0.0.1:2525',
         IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {'autoconnect': false}).build());
     socket!.connect();
@@ -23,7 +23,8 @@ class ChatService {
       (data) {
         if (data != null) {
           debugPrint('Data from chatHistory event $data');
-          messageStream.value = List<Map<String, dynamic>>.from(data);
+          messageStream.value =
+              List<Map<String, dynamic>>.from(data['messages']);
         }
       },
     );
@@ -50,6 +51,13 @@ class ChatService {
         'message',
         {'roomId': roomId, 'senderId': senderId, 'message': message},
       );
+    }
+  }
+
+  Future<void> joinRoom(String roomId, String userId) async {
+    if (socket != null) {
+      debugPrint('Before the join room event');
+      socket!.emit('join', {'roomId': roomId, 'userId': userId});
     }
   }
 

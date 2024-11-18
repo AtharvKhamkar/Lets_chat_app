@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/screens/login_page.dart';
+import 'package:lets_chat/services/local_auth_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,15 +41,24 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> loadUserCredentials() async {
     try {
-      _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
-      if (await _sharedPref.isLoggedIn()) {
-        email = _sharedPref.prefs?.getString(SharedPreferenceService.emailKey);
-        password =
-            _sharedPref.prefs?.getString(SharedPreferenceService.passwordKey);
-        if (email!.isNotEmpty && password!.isNotEmpty) {
-          authController.emailController.text = email ?? '';
-          authController.passwordController.text = password ?? '';
-          authController.login();
+      if (await LocalAuthService.service.authenticationProcess()) {
+        _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
+        if (await _sharedPref.isLoggedIn()) {
+          final checkLogginStatus = await _sharedPref.isLoggedIn();
+          debugPrint(
+              'Result of the previous login status is $checkLogginStatus');
+          email =
+              _sharedPref.prefs?.getString(SharedPreferenceService.emailKey);
+          password =
+              _sharedPref.prefs?.getString(SharedPreferenceService.passwordKey);
+          debugPrint('Obtained email and password is $email and $password');
+          if (email!.isNotEmpty && password!.isNotEmpty) {
+            authController.emailController.text = email ?? '';
+            authController.passwordController.text = password ?? '';
+            authController.login();
+          } else {
+            Get.offAll(() => const LoginPage(), binding: AuthBinding());
+          }
         } else {
           Get.offAll(() => const LoginPage(), binding: AuthBinding());
         }

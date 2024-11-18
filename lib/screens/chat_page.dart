@@ -52,13 +52,13 @@ class _ChatPageState extends State<ChatPage> {
     debugPrint('UserId from the initializeSharedPreferences function $_userId');
 
     if (_userId != null && _receiverId != null) {
-      initializeRoom(_userId!, _receiverId!);
-      chatController.connectToSocket(_roomId!, _userId!);
+      await initializeRoom(_userId!, _receiverId!);
+      await chatController.connectToSocket(_roomId!, _userId!);
       setState(() => _loading = false);
     }
   }
 
-  void initializeRoom(String userId, String receiverId) {
+  Future<void> initializeRoom(String userId, String receiverId) async {
     final result = chatController.createChatRoom(userId, receiverId);
     _roomId = UtilFunction().generateChatID(uid1: userId, uid2: receiverId);
   }

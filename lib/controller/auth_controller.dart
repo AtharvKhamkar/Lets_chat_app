@@ -87,7 +87,8 @@ class AuthController extends GetxController with StateMixin<dynamic> {
       profile(result);
       Future<bool> isPrefProcessSuccess = _sharedPref.saveUserCredentials(
           emailController.text, passwordController.text, profile.value.id!);
-      debugPrint('Result of the profile info ${profile.value.id} : ${profile.value.email}');
+      debugPrint(
+          'Result of the profile info ${profile.value.id} : ${profile.value.email}');
       update();
       reset();
       Get.offAllNamed('/home-screen');
