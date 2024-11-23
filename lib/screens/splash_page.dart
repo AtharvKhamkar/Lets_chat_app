@@ -47,6 +47,10 @@ class _SplashPageState extends State<SplashPage> {
           final checkLogginStatus = await _sharedPref.isLoggedIn();
           debugPrint(
               'Result of the previous login status is $checkLogginStatus');
+          debugPrint(
+              'fetching saved email :: ${_sharedPref.prefs?.getString(SharedPreferenceService.emailKey)}');
+          debugPrint(
+              'fetching saved password :: ${_sharedPref.prefs?.getString(SharedPreferenceService.passwordKey)}');
           email =
               _sharedPref.prefs?.getString(SharedPreferenceService.emailKey);
           password =

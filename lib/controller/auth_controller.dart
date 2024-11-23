@@ -36,14 +36,17 @@ class AuthController extends GetxController with StateMixin<dynamic> {
   var errorPasswordMessage = "".obs;
 
   @override
-  void onInit() {
+  void onInit() async {
+    super.onInit();
     if (kDebugMode) {
       usernameController.text = "";
       emailController.text = "";
       passwordController.text = "";
     }
-    initializeSharedPreferences();
-    super.onInit();
+    await initializeSharedPreferences();
+    if (_sharedPref.prefs == null) {
+      debugPrint('Shared preference is not initalized in the AuthController');
+    }
   }
 
   Future<void> initializeSharedPreferences() async {
@@ -73,7 +76,7 @@ class AuthController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  void login() async {
+  Future<void> login() async {
     if (isLoading.value) return;
     isLoading(true);
     update();
@@ -81,16 +84,13 @@ class AuthController extends GetxController with StateMixin<dynamic> {
     final result = await _authRepo.loginUser(
         emailController.text, passwordController.text);
 
-    debugPrint('Result of the login process :: ${result}');
-
     if (result != null) {
       profile(result);
-      Future<bool> isPrefProcessSuccess = _sharedPref.saveUserCredentials(
+      bool isPrefProcessSuccess = await _sharedPref.saveUserCredentials(
           emailController.text, passwordController.text, profile.value.id!);
-      debugPrint(
-          'Result of the profile info ${profile.value.id} : ${profile.value.email}');
+
       update();
-      reset();
+      // reset();
       Get.offAllNamed('/home-screen');
     } else {
       Get.snackbar('Login process failed', 'Please try again after some time');

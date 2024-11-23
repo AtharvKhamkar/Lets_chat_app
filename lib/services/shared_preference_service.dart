@@ -41,10 +41,20 @@ class SharedPreferenceService {
     const String FUNCTION_NAME = 'SAVE_USER_CREDENTIALS';
     try {
       // await clearUserData();
+      if (prefs == null) {
+        debugPrint('pref is not initialized in $FUNCTION_NAME');
+        return false;
+      }
       await prefs!.setString(userIdKey, userId);
       await prefs!.setString(emailKey, email);
       await prefs!.setString(passwordKey, password);
       await prefs!.setBool(isLoggedInKey, true);
+      debugPrint(
+          'saved value of userId is ${prefs?.getString(SharedPreferenceService.userIdKey)}');
+      debugPrint(
+          'saved value of emailKey is ${prefs?.getString(SharedPreferenceService.emailKey)}');
+      debugPrint(
+          'saved value of password is ${prefs?.getString(SharedPreferenceService.passwordKey)}');
       return true;
     } catch (e) {
       debugPrint('Error in the $SERVICE_NAME :: $FUNCTION_NAME :: $e');

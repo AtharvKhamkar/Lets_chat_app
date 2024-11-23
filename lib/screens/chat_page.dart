@@ -7,6 +7,7 @@ import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
+import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/util_function.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
@@ -63,28 +64,66 @@ class _ChatPageState extends State<ChatPage> {
     _roomId = UtilFunction().generateChatID(uid1: userId, uid2: receiverId);
   }
 
-  void _onSendPressed(types.PartialText message) {
+  void _onSendPressed(types.PartialText message) async {
     if (_roomId != null && _userId != null) {
-      chatController.sendMessage(_roomId!, _userId!, message.text);
+      await chatController.sendMessage(_roomId!, _userId!, message.text);
+      await chatController.sendTypingEvent(_roomId!, _receiverId!, false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: widget.receiverUser.username!),
-      body: _userId != null
-          ? Obx(() => Chat(
-                messages: chatController.messages.toList(),
-                onSendPressed: _onSendPressed,
-                user: types.User(id: _userId!),
-              ))
-          : const Center(
-              child: Text(
-                'User Id not found',
-                style: TextStyles.defaultText,
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: widget.receiverUser.username!,
+          // actions: [
+          //   Obx(() {
+          //     return chatController.isOtherUserTyping.value
+          //         ? const Text('Typing...', style: TextStyles.defaultText)
+          //         : const Text('');
+          //   })
+          // ],
+          textWidget: Obx(() {
+            return chatController.isOtherUserTyping.value
+                ? const Text(
+                    'Typing...',
+                    style: TextStyles.defaultText,
+                  )
+                : const SizedBox.shrink();
+          }),
+        ),
+        body: _userId != null
+            ? Obx(() => Chat(
+                  messages: chatController.messages.toList(),
+                  onSendPressed: _onSendPressed,
+                  user: types.User(id: _userId!),
+                  theme: DefaultChatTheme(
+                      backgroundColor: AppColors.primaryColor,
+                      inputBackgroundColor: Colors.indigo.shade400),
+                  inputOptions: InputOptions(onTextChanged: (text) {
+                    debugPrint(
+                        'User started typing :: length of the text is ${text.length}');
+                    // if (text.isNotEmpty) {
+                    //   chatController.sendTypingEvent(
+                    //       _roomId!, _receiverId!, true);
+                    // } else {
+                    //   chatController.sendTypingEvent(
+                    //       _roomId!, _receiverId!, false);
+                    // }
+                    chatController.onTextChanged(
+                        _roomId!, text, _receiverId!, true);
+                  }),
+                ))
+            : const Center(
+                child: Text(
+                  'User Id not found',
+                  style: TextStyles.defaultText,
+                ),
               ),
-            ),
+      ),
     );
   }
 }

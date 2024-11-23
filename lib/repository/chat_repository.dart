@@ -13,12 +13,25 @@ class ChatRepository {
       final response =
           await apiClient.post('/chat/create', body: body, headers: headers);
       final roomDetails = response['response'];
-      if(roomDetails != null){
+      if (roomDetails != null) {
         return ChatRoomModel.fromJson(roomDetails);
       }
     } catch (e) {
       debugPrint('Error in the ChatRepository :: createRoom :: $e');
     }
     return null;
+  }
+
+  Future<dynamic> uploadImageRequest(dynamic byte) async {
+    try {
+      Map<String, String> file = {"file": byte};
+
+      final response = await apiClient.multipartRequest('/chat/upload-image',
+          files:
+              file); //change in backend instead of imageFile parameter use file parameter
+      return response;
+    } catch (e) {
+      debugPrint('Error in the ChatRepository :: uploadImageRequest :: $e');
+    }
   }
 }

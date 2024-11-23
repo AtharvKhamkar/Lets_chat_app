@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
                       controller.login();
-                      controller.reset();
+                      // controller.reset();
                     },
                   ),
                 ]),

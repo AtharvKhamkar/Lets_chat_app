@@ -15,6 +15,8 @@ class ChatController extends GetxController with StateMixin<dynamic> {
   //Booleans
   var isLoading = false.obs;
   var hasData = false.obs;
+  var isCurrentUserTyping = false.obs;
+  var isOtherUserTyping = false.obs;
 
   //Strings
   var errorMessages = "".obs;
@@ -42,6 +44,12 @@ class ChatController extends GetxController with StateMixin<dynamic> {
         'Socket connection request started :: connectToSocket :: ChatController');
     await _chatService.connect(roomId, userId);
     await _chatService.joinRoom(roomId, userId);
+
+    ///Check typing status of the other user
+    _chatService.typingStream.addListener(() {
+      isOtherUserTyping.value = _chatService.typingStream.value;
+    });
+
     _chatService.messageStream.addListener(() {
       final chatHistory = _chatService.messageStream.value;
       messages.clear();
@@ -53,25 +61,49 @@ class ChatController extends GetxController with StateMixin<dynamic> {
           author: types.User(id: messageData['senderId'] ?? 'unknown'),
           id: messageData['_id'] ?? DateTime.now().toIso8601String(),
           text: messageData['content'] ?? '[No content]',
-          createdAt: messageData['timestamp'] != null
-              ? DateTime.parse(messageData['timestamp']).millisecondsSinceEpoch
+          createdAt: messageData['createdAt'] != null
+              ? DateTime.parse(messageData['createdAt']).millisecondsSinceEpoch
               : DateTime.now().millisecondsSinceEpoch,
         );
-        messages.add(receivedMessage);
+        debugPrint('message before adding received message $receivedMessage');
+        messages.insert(0, receivedMessage);
       }
     });
   }
 
-  void sendMessage(String roomId, String senderId, String text) {
-    _chatService.sendMessage(roomId, senderId, text);
-    final newMessage = types.TextMessage(
-      author: types.User(id: senderId),
-      id: senderId,
-      text: text,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-    );
+  Future<void> sendMessage(String roomId, String senderId, String text) async {
+    final Map<String, dynamic> sendMessageData = {
+      'Id': DateTime.now().toIso8601String(),
+      'senderId': senderId,
+      'content': text,
+      'createdAt': DateTime.now().millisecondsSinceEpoch,
+    };
+    _chatService.sendMessage(roomId, senderId, sendMessageData);
+    // final newMessage = types.TextMessage(
+    //   author: types.User(id: sendMessageData['senderId']),
+    //   id: sendMessageData['Id'],
+    //   text: sendMessageData['content'],
+    //   createdAt: sendMessageData['createdAt'],
+    // );
 
-    messages.add(newMessage);
+    // debugPrint(
+    //     'created new message before inserting in an array is $newMessage');
+
+    // messages.insert(0, newMessage);
+  }
+
+  Future<void> sendTypingEvent(
+      String roomId, String receiverId, bool status) async {
+    _chatService.sendTypingEvent(roomId, receiverId, status);
+  }
+
+  void onTextChanged(
+      String roomId, String text, String receiverId, bool status) {
+    if (text.isNotEmpty) {
+      sendTypingEvent(roomId, receiverId, true);
+    } else {
+      sendTypingEvent(roomId, receiverId, false);
+    }
   }
 
   @override
