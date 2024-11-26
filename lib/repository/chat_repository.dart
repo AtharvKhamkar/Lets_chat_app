@@ -24,7 +24,7 @@ class ChatRepository {
 
   Future<dynamic> uploadImageRequest(dynamic byte) async {
     try {
-      Map<String, String> file = {"file": byte};
+      Map<String, String> file = {"imageFile": byte};
 
       final response = await apiClient.multipartRequest('/chat/upload-image',
           files:

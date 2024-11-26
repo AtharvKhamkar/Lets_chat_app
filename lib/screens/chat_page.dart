@@ -86,6 +86,17 @@ class _ChatPageState extends State<ChatPage> {
           //         : const Text('');
           //   })
           // ],
+          actions: [
+            IconButton(
+              onPressed: () {
+                chatController.sendImageMessage(_roomId!, _userId!);
+              },
+              icon: const Icon(
+                Icons.file_upload_outlined,
+                color: Colors.white,
+              ),
+            )
+          ],
           textWidget: Obx(() {
             return chatController.isOtherUserTyping.value
                 ? const Text(
@@ -99,6 +110,9 @@ class _ChatPageState extends State<ChatPage> {
             ? Obx(() => Chat(
                   messages: chatController.messages.toList(),
                   onSendPressed: _onSendPressed,
+                  onAttachmentPressed: () {
+                    chatController.sendImageMessage(_roomId!, _userId!);
+                  },
                   user: types.User(id: _userId!),
                   theme: DefaultChatTheme(
                       backgroundColor: AppColors.primaryColor,

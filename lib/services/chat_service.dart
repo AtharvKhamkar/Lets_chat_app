@@ -59,7 +59,12 @@ class ChatService {
     if (socket != null) {
       socket!.emit(
         'message',
-        {'roomId': roomId, 'senderId': senderId, 'message': message['content']},
+        {
+          'roomId': roomId,
+          'senderId': senderId,
+          'message': message['content'],
+          'messageType': message['messageType']
+        },
       );
     }
   }

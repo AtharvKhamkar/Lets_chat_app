@@ -4,10 +4,12 @@ import 'package:lets_chat/Routes/app_router.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/register_services.dart';
+import 'package:lets_chat/widgets/custom_toast_util.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 void main() async {
   await registerServices();
-  runApp(const MyApp());
+  runApp(const OverlaySupport.global(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    CustomToastUtil.init(context);
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
