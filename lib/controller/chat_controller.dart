@@ -2,8 +2,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lets_chat/modals/chat_history_model/chat_history_model..dart';
+import 'package:lets_chat/modals/chat_history_model..dart';
 import 'package:lets_chat/modals/chat_room_model.dart';
+import 'package:lets_chat/modals/send_messsage_model.dart';
 import 'package:lets_chat/repository/chat_repository.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:lets_chat/services/chat_service.dart';
@@ -56,46 +57,12 @@ class ChatController extends GetxController with StateMixin<dynamic> {
 
     List<Message> chatHistory = [];
     _chatService.messageStream.addListener(() {
-      debugPrint(
-          'Reached execution before messageStream listner ${chatHistory.length}');
       chatHistory = _chatService.messageStream.value;
-      debugPrint(
-          'Reached execution after messageStream listner ${chatHistory.length}');
       messages.clear();
 
       try {
         if (chatHistory.isNotEmpty) {
-          for (var messageData in chatHistory) {
-            debugPrint(
-                'MessageData in the connectToSocket function is $messageData');
-
-            final String? messageType =
-                messageData.messageType; // Default to text
-            late final types.Message receivedMessage;
-
-            if (messageType == 'TEXT') {
-              receivedMessage = types.TextMessage(
-                  author: types.User(id: messageData.senderId),
-                  id: messageData.id,
-                  text: messageData.content,
-                  createdAt: DateTime.parse(messageData.createdAt)
-                      .millisecondsSinceEpoch);
-            } else if (messageType == 'IMAGE') {
-              receivedMessage = types.ImageMessage(
-                  author: types.User(id: messageData.senderId),
-                  id: messageData.id,
-                  name: 'test name',
-                  size: 10,
-                  uri: messageData.content);
-            } else {
-              debugPrint('Unknown message type: $messageType');
-              continue; // Skip unknown message types
-            }
-
-            debugPrint(
-                'message before adding received message $receivedMessage');
-            messages.insert(0, receivedMessage);
-          }
+          processMessage(chatHistory);
         }
       } catch (e) {
         debugPrint('Error parsing message: $e');
@@ -106,30 +73,62 @@ class ChatController extends GetxController with StateMixin<dynamic> {
         'Reached execution before for loop -------> ${chatHistory.length}');
   }
 
+  void processMessage(List<Message> chatHistory) {
+    for (var messageData in chatHistory) {
+      //Only add new message in the message List if the message is not present in the previous message list.
+      if (!messages.any((msg) => msg.id == messageData.id)) {
+        debugPrint(
+            'MessageData in the connectToSocket function is $messageData');
+
+        final String messageType = messageData.messageType; // Default to text
+        late final types.Message receivedMessage;
+
+        if (messageType == 'TEXT') {
+          receivedMessage = types.TextMessage(
+              author: types.User(id: messageData.senderId),
+              id: messageData.id,
+              text: messageData.content,
+              createdAt:
+                  DateTime.parse(messageData.createdAt).millisecondsSinceEpoch);
+        } else if (messageType == 'IMAGE') {
+          receivedMessage = types.ImageMessage(
+              author: types.User(id: messageData.senderId),
+              id: messageData.id,
+              name: 'test name',
+              size: 10,
+              uri: messageData.content);
+        } else {
+          debugPrint('Unknown message type: $messageType');
+          continue; // Skip unknown message types
+        }
+
+        debugPrint('message before adding received message $receivedMessage');
+        messages.insert(0, receivedMessage);
+      }
+    }
+  }
+
   Future<void> sendMessage(
     String roomId,
     String senderId,
     String text,
   ) async {
-    final Map<String, dynamic> sendMessageData = {
-      'Id': DateTime.now().toIso8601String(),
-      'senderId': senderId,
-      'content': text,
-      'messageType': 'TEXT',
-      'createdAt': DateTime.now().millisecondsSinceEpoch,
-    };
-    _chatService.sendMessage(roomId, senderId, sendMessageData);
-    final newMessage = types.TextMessage(
-      author: types.User(id: sendMessageData['senderId']),
-      id: sendMessageData['Id'],
-      text: sendMessageData['content'],
-      createdAt: sendMessageData['createdAt'],
-    );
+    final SendMesssageModel sendMessageData = SendMesssageModel(
+        roomId: roomId, senderId: senderId, content: text, messageType: 'TEXT');
 
-    debugPrint(
-        'created new message before inserting in an array is $newMessage');
+    _chatService.sendMessage(sendMessageData);
 
-    messages.insert(0, newMessage);
+    // final newMessage = types.TextMessage(
+    //   author: types.User(id: sendMessageData['senderId']),
+    //   id: sendMessageData['Id'],
+    //   text: sendMessageData['content'],
+    //   createdAt: sendMessageData['createdAt'],
+    // );
+
+    // debugPrint(
+    //     'created new message before inserting in an array is $newMessage');
+
+    // messages.insert(0, newMessage);
   }
 
   Future<void> sendImageMessage(String roomId, String senderId) async {
@@ -138,42 +137,42 @@ class ChatController extends GetxController with StateMixin<dynamic> {
     errorMessages('');
     update();
 
+    //Pick local file
     final pickedFile = await UtilFunction()
         .chooseFile(type: FileType.custom, allowedExtensions: ['png']);
 
     if (pickedFile != null) {
       debugPrint('picked file path : ${pickedFile.path}');
       try {
+        //Upload local file to upload message image endpoint
         final uploadResponse =
             await _chatRepo.uploadImageRequest(pickedFile.path);
         debugPrint('Result of the uploaded file is $uploadResponse');
         if (uploadResponse['success']) {
-          CustomToastUtil.showToast(
-              message: 'Image Uploaded Successfully',
-              prefixIcon: Icons.check,
-              textColor: Colors.black,
-              borderColor: Colors.green,
-              backgroundColor: Colors.greenAccent);
-          debugPrint('File uploaded successfully');
+          CustomToastUtil.showSucessToast(
+              message: 'Image uploaded successfully');
+
           debugPrint(
               'Result of the uri is ${uploadResponse['response']['uri']}');
-          final Map<String, dynamic> sendMessageData = {
-            'Id': DateTime.now().toIso8601String(),
-            'senderId': senderId,
-            'content': uploadResponse['response']['uri'],
-            'messageType': 'IMAGE',
-            'createdAt': DateTime.now().millisecondsSinceEpoch,
-          };
 
-          final sendImageMessage = types.ImageMessage(
-              author: types.User(id: senderId),
-              id: sendMessageData['Id'],
-              name: uploadResponse['response']['name'],
-              size: uploadResponse['response']['size'],
-              uri: sendMessageData['content']);
+          //create SendMessageModel object for sending ImageMessage
+          final SendMesssageModel sendMessageData = SendMesssageModel(
+              roomId: roomId,
+              senderId: senderId,
+              content: uploadResponse['response']['uri'],
+              messageType: 'IMAGE');
 
-          messages.insert(0, sendImageMessage);
-          _chatService.sendMessage(roomId, senderId, sendMessageData);
+          // final sendImageMessage = types.ImageMessage(
+          //     author: types.User(id: senderId),
+          //     id: sendMessageData['Id'],
+          //     name: uploadResponse['response']['name'],
+          //     size: uploadResponse['response']['size'],
+          //     uri: sendMessageData['content']);
+
+          // messages.insert(0, sendImageMessage);
+
+          //Send message to server
+          _chatService.sendMessage(sendMessageData);
         }
       } catch (e) {
         debugPrint('No file was picked');

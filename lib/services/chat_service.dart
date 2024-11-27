@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:lets_chat/constants/constants.dart';
-import 'package:lets_chat/modals/chat_history_model/chat_history_model..dart';
+import 'package:lets_chat/modals/chat_history_model..dart';
+import 'package:lets_chat/modals/send_messsage_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatService {
@@ -43,8 +44,11 @@ class ChatService {
     socket!.on('message', (data) {
       if (data != null) {
         final jsonData = jsonEncode(data);
-        debugPrint('Data from chatHistory event (formatted JSON): $jsonData');
-        messageStream.value = [...?messageStream.value, data];
+        debugPrint('Data from message event (formatted JSON): $jsonData');
+
+        final parsedMessage = Message.fromJson(data);
+
+        messageStream.value = [...messageStream.value, parsedMessage];
       }
     });
 
@@ -63,16 +67,15 @@ class ChatService {
     });
   }
 
-  void sendMessage(
-      String roomId, String senderId, Map<String, dynamic> message) {
+  void sendMessage(SendMesssageModel message) {
     if (socket != null) {
       socket!.emit(
         'message',
         {
-          'roomId': roomId,
-          'senderId': senderId,
-          'message': message['content'],
-          'messageType': message['messageType']
+          'roomId': message.roomId,
+          'senderId': message.senderId,
+          'message': message.content,
+          'messageType': message.messageType
         },
       );
     }
