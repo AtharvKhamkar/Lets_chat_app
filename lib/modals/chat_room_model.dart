@@ -30,12 +30,10 @@ class ChatRoomModel {
         senderId: json['senderId'] as String?,
         receiverId: json['receiverId'] as String?,
         messages: json['messages'] as List<dynamic>?,
-        createdAt: json['createdAt'] == null
-            ? null
-            : json['createdAt'] as String,
-        updatedAt: json['updatedAt'] == null
-            ? null
-            : json['updatedAt'] as String,
+        createdAt:
+            json['createdAt'] == null ? null : json['createdAt'] as String,
+        updatedAt:
+            json['updatedAt'] == null ? null : json['updatedAt'] as String,
         v: json['__v'] as int?,
       );
 

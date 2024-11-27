@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/modals/chat_history_model/chat_history_model..dart';
 import 'package:lets_chat/modals/chat_room_model.dart';
 import 'package:lets_chat/repository/chat_repository.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -53,7 +54,7 @@ class ChatController extends GetxController with StateMixin<dynamic> {
       isOtherUserTyping.value = _chatService.typingStream.value;
     });
 
-    List<Map<String, dynamic>> chatHistory = [];
+    List<Message> chatHistory = [];
     _chatService.messageStream.addListener(() {
       debugPrint(
           'Reached execution before messageStream listner ${chatHistory.length}');
@@ -63,38 +64,38 @@ class ChatController extends GetxController with StateMixin<dynamic> {
       messages.clear();
 
       try {
-        for (var messageData in chatHistory) {
-          debugPrint(
-              'MessageData in the connectToSocket function is $messageData');
+        if (chatHistory.isNotEmpty) {
+          for (var messageData in chatHistory) {
+            debugPrint(
+                'MessageData in the connectToSocket function is $messageData');
 
-          final String messageType =
-              messageData['messageType'] ?? 'TEXT'; // Default to text
-          late final types.Message receivedMessage;
+            final String? messageType =
+                messageData.messageType; // Default to text
+            late final types.Message receivedMessage;
 
-          if (messageType == 'TEXT') {
-            receivedMessage = types.TextMessage(
-              author: types.User(id: messageData['senderId'] ?? 'unknown'),
-              id: messageData['_id'] ?? DateTime.now().toIso8601String(),
-              text: messageData['content'] ?? '[No content]',
-              createdAt: messageData['createdAt'] != null
-                  ? DateTime.parse(messageData['createdAt'])
-                      .millisecondsSinceEpoch
-                  : DateTime.now().millisecondsSinceEpoch,
-            );
-          } else if (messageType == 'IMAGE') {
-            receivedMessage = types.ImageMessage(
-                author: types.User(id: messageData['senderId'] ?? 'unknown'),
-                id: messageData['_id'] ?? DateTime.now().toIso8601String(),
-                name: 'test name',
-                size: 10,
-                uri: messageData['content'] ?? '[No content]');
-          } else {
-            debugPrint('Unknown message type: $messageType');
-            continue; // Skip unknown message types
+            if (messageType == 'TEXT') {
+              receivedMessage = types.TextMessage(
+                  author: types.User(id: messageData.senderId),
+                  id: messageData.id,
+                  text: messageData.content,
+                  createdAt: DateTime.parse(messageData.createdAt)
+                      .millisecondsSinceEpoch);
+            } else if (messageType == 'IMAGE') {
+              receivedMessage = types.ImageMessage(
+                  author: types.User(id: messageData.senderId),
+                  id: messageData.id,
+                  name: 'test name',
+                  size: 10,
+                  uri: messageData.content);
+            } else {
+              debugPrint('Unknown message type: $messageType');
+              continue; // Skip unknown message types
+            }
+
+            debugPrint(
+                'message before adding received message $receivedMessage');
+            messages.insert(0, receivedMessage);
           }
-
-          debugPrint('message before adding received message $receivedMessage');
-          messages.insert(0, receivedMessage);
         }
       } catch (e) {
         debugPrint('Error parsing message: $e');

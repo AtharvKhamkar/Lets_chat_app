@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lets_chat/constants/constants.dart';
+import 'package:lets_chat/modals/chat_history_model/chat_history_model..dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatService {
   IO.Socket? socket;
-  final messageStream = ValueNotifier<List<Map<String, dynamic>>>([]);
+  final messageStream = ValueNotifier<List<Message>>([]);
   final typingStream = ValueNotifier<bool>(false);
 
   Future<void> connect(String roomId, String userId) async {
@@ -25,17 +28,23 @@ class ChatService {
       'chatHistory',
       (data) {
         if (data != null) {
-          debugPrint('Data from chatHistory event $data');
-          messageStream.value =
-              List<Map<String, dynamic>>.from(data['messages']);
+          final jsonData = jsonEncode(data);
+          debugPrint('Data from chatHistory event (formatted JSON): $jsonData');
+
+          ///History Object from 'chatHistory' event
+          final chatHistoryObject = ChatHistoryModel.fromJson(data);
+
+          ///Sending only messages list to the messageStream
+          messageStream.value = chatHistoryObject.messages;
         }
       },
     );
 
     socket!.on('message', (data) {
       if (data != null) {
-        debugPrint('Data from message event $data');
-        messageStream.value = [...messageStream.value, data];
+        final jsonData = jsonEncode(data);
+        debugPrint('Data from chatHistory event (formatted JSON): $jsonData');
+        messageStream.value = [...?messageStream.value, data];
       }
     });
 
