@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/controller/user_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
 import 'package:lets_chat/screens/chat_page.dart';
-import 'package:lets_chat/services/chat_service.dart';
+import 'package:lets_chat/services/app_dialog_handler_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
-import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 import 'package:lets_chat/widgets/custom_padding.dart';
@@ -115,29 +113,37 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => ChatPage(receiverUser: receiverUser),
-            binding: ChatBinding());
-      },
-      child: SizedBox(
-        height: Get.height * 0.1,
-        width: Get.width,
-        child: Row(
-          children: [
-            CircleAvatar(
+    return SizedBox(
+      height: Get.height * 0.1,
+      width: Get.width,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              AppDialogHandlerService.showUserDetailsDialog(
+                  receiverUser.Id ?? '');
+            },
+            child: CircleAvatar(
               backgroundColor: Colors.blue[300],
               child: Text(receiverUser.username![0].toUpperCase()),
             ),
-            const SizedBox(
-              width: 20,
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => ChatPage(receiverUser: receiverUser),
+                  binding: ChatBinding());
+            },
+            child: SizedBox(
+              child: Text(
+                receiverUser.username!,
+                style: TextStyles.headLine2,
+              ),
             ),
-            Text(
-              receiverUser.username!,
-              style: TextStyles.headLine2,
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

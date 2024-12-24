@@ -13,7 +13,7 @@ class ChatService {
 
   Future<void> connect(String roomId, String userId) async {
     socket = IO.io(
-        Constants.BASE_ANDROID_CHAT_LOCAL_URL,
+        Constants.BASE_CHAT_URL,
         // 'ws://127.0.0.1:2525',
         IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {'autoconnect': false}).build());

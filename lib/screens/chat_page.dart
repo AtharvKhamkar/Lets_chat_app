@@ -11,7 +11,6 @@ import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/util_function.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
-import 'package:lets_chat/widgets/custom_padding.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatPage extends StatefulWidget {
@@ -79,13 +78,6 @@ class _ChatPageState extends State<ChatPage> {
       child: Scaffold(
         appBar: CustomAppBar(
           title: widget.receiverUser.username!,
-          // actions: [
-          //   Obx(() {
-          //     return chatController.isOtherUserTyping.value
-          //         ? const Text('Typing...', style: TextStyles.defaultText)
-          //         : const Text('');
-          //   })
-          // ],
           actions: [
             IconButton(
               onPressed: () {
@@ -111,7 +103,11 @@ class _ChatPageState extends State<ChatPage> {
                   messages: chatController.messages.toList(),
                   onSendPressed: _onSendPressed,
                   onAttachmentPressed: () {
+                    //for sending image
                     chatController.sendImageMessage(_roomId!, _userId!);
+
+                    //For sending file
+                    // chatController.sendFileMessage(_roomId!, _userId!);
                   },
                   user: types.User(id: _userId!),
                   theme: DefaultChatTheme(

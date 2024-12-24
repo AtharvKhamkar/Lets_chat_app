@@ -90,7 +90,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         errorMessage: 'Enter valid password',
                         listOfAutofill: const [AutofillHints.password],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       CustomFormButton(
                           innerText: 'Register',
                           isLoading: controller.isLoading.value,

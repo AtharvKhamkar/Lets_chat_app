@@ -97,6 +97,13 @@ class ChatController extends GetxController with StateMixin<dynamic> {
               name: 'test name',
               size: 10,
               uri: messageData.content);
+        } else if (messageType == 'FILE') {
+          receivedMessage = types.FileMessage(
+              author: types.User(id: messageData.senderId),
+              id: messageData.id,
+              name: 'test name',
+              size: 10,
+              uri: messageData.content);
         } else {
           debugPrint('Unknown message type: $messageType');
           continue; // Skip unknown message types
@@ -160,7 +167,58 @@ class ChatController extends GetxController with StateMixin<dynamic> {
               roomId: roomId,
               senderId: senderId,
               content: uploadResponse['response']['uri'],
-              messageType: 'IMAGE');
+              messageType: 'FILE');
+
+          // final sendImageMessage = types.ImageMessage(
+          //     author: types.User(id: senderId),
+          //     id: sendMessageData['Id'],
+          //     name: uploadResponse['response']['name'],
+          //     size: uploadResponse['response']['size'],
+          //     uri: sendMessageData['content']);
+
+          // messages.insert(0, sendImageMessage);
+
+          //Send message to server
+          _chatService.sendMessage(sendMessageData);
+        }
+      } catch (e) {
+        debugPrint('No file was picked');
+        update();
+        isLoading(false);
+      }
+    }
+  }
+
+  Future<void> sendFileMessage(String roomId, String senderId) async {
+    if (isLoading.value) return;
+    isLoading(true);
+    errorMessages('');
+    update();
+
+    //Pick local file
+    final pickedFile = await UtilFunction()
+        .chooseFile(type: FileType.custom, allowedExtensions: ['pdf']);
+
+    if (pickedFile != null) {
+      debugPrint('picked file path : ${pickedFile.path}');
+      try {
+        //Upload local file to upload message image endpoint
+        final uploadResponse =
+            await _chatRepo.uploadImageRequest(pickedFile.path);
+        debugPrint('Result of the uploaded file is $uploadResponse');
+        if (uploadResponse['success']) {
+          CustomToastUtil.showSucessToast(
+              message: 'File uploaded successfully');
+
+          debugPrint(
+              'Result of the uri is ${uploadResponse['response']['uri']}');
+
+          //create SendMessageModel object for sending ImageMessage
+          final SendMesssageModel sendMessageData = SendMesssageModel(
+              roomId: roomId,
+              senderId: senderId,
+              content: uploadResponse['response']['uri'],
+              messageType: 'FILE');
 
           // final sendImageMessage = types.ImageMessage(
           //     author: types.User(id: senderId),

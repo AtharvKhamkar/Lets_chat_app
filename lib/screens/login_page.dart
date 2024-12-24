@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
-import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/validation.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';

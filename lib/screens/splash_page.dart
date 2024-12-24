@@ -6,7 +6,6 @@ import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/screens/login_page.dart';
 import 'package:lets_chat/services/local_auth_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});

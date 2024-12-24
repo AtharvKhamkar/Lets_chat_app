@@ -24,4 +24,12 @@ class UserController extends GetxController with StateMixin<dynamic> {
     isLoading(false);
     update();
   }
+
+  // void getUserDetails(String userId) async {
+  //   if (isLoading.value) return;
+  //   isLoading(true);
+  //   update();
+
+  //   final result = await _userRepo.userDetails(userId);
+  // }
 }
