@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
 import 'package:lets_chat/repository/user_repository.dart';
 import 'package:lets_chat/utils/colors.dart';
@@ -45,6 +46,13 @@ class AppDialogHandlerService {
 
                     if (snapshot.hasData && snapshot.data != null) {
                       final userDetails = snapshot.data!;
+                      DateTime utcTime = DateTime.parse(userDetails.createdAt!);
+
+                      DateTime localCreatedTime = utcTime.toLocal();
+
+                      String formattedLocalCreatedTime =
+                          DateFormat('dd MMM yyyy').format(localCreatedTime);
+
                       return Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
@@ -115,7 +123,7 @@ class AppDialogHandlerService {
                                         color: AppColors.primaryColor),
                                   ),
                                   TextSpan(
-                                    text: userDetails.createdAt,
+                                    text: formattedLocalCreatedTime,
                                     style: const TextStyle(
                                         fontSize: 18,
                                         color: AppColors.primaryColor,

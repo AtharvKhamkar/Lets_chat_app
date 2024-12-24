@@ -167,7 +167,7 @@ class ChatController extends GetxController with StateMixin<dynamic> {
               roomId: roomId,
               senderId: senderId,
               content: uploadResponse['response']['uri'],
-              messageType: 'FILE');
+              messageType: 'IMAGE');
 
           // final sendImageMessage = types.ImageMessage(
           //     author: types.User(id: senderId),
