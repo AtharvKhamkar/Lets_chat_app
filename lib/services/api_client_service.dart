@@ -1,9 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:lets_chat/constants/constants.dart';
+import 'package:lets_chat/constants/app_config.dart';
+import 'package:lets_chat/constants/app_config_dev.dart';
+import 'package:lets_chat/constants/app_config_prod.dart';
+import 'package:lets_chat/flavors.dart';
+
+import 'package:lets_chat/main_prod.dart';
 
 class ApiClientService {
+  static final ApiClientService _instance = ApiClientService._internal();
+
+  factory ApiClientService() {
+    return _instance;
+  }
+
+  ApiClientService._internal() {
+    _initialize();
+  }
+
   final Dio _dio = Dio();
+
+  AppConfig appConfig = getIt<AppConfig>();
 
   Map<String, String> _headers() {
     Map<String, String> map = {};
@@ -11,8 +28,8 @@ class ApiClientService {
     return map;
   }
 
-  ApiClientService() {
-    _dio.options.baseUrl = Constants.BASE_URL;
+  void _initialize() {
+    _dio.options.baseUrl = appConfig.BASE_URL;
   }
 
   Future<dynamic> get(String endpoint, {Map<String, dynamic>? headers}) async {

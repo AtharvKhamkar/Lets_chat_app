@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:lets_chat/constants/constants.dart';
+import 'package:lets_chat/constants/app_config.dart';
+import 'package:lets_chat/main_prod.dart';
 import 'package:lets_chat/modals/chat_history_model..dart';
 import 'package:lets_chat/modals/send_messsage_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -10,10 +11,12 @@ class ChatService {
   IO.Socket? socket;
   final messageStream = ValueNotifier<List<Message>>([]);
   final typingStream = ValueNotifier<bool>(false);
+  AppConfig appConfig = getIt<AppConfig>();
 
   Future<void> connect(String roomId, String userId) async {
     socket = IO.io(
-        Constants.BASE_CHAT_URL,
+        appConfig.BASE_CHAT_URL,
+        // Constants.BASE_IOS_CHAT_LOCAL_URL,
         // 'ws://127.0.0.1:2525',
         IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {'autoconnect': false}).build());

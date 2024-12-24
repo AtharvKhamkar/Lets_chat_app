@@ -1,0 +1,72 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "lets chat app dev (dev)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_dev.dart",
+        "args": [
+          "--flavor",
+          "dev"
+        ],
+        "flutterMode": "debug"
+      },
+      {
+        "name": "lets chat (prod)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_prod.dart",
+        "args": [
+          "--flavor",
+          "prod"
+        ],
+        "flutterMode": "debug"
+      },
+      {
+        "name": "lets chat app dev (profile mode - dev)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_dev.dart",
+        "args": [
+          "--flavor",
+          "dev"
+        ],
+        "flutterMode": "profile"
+      },
+      {
+        "name": "lets chat (profile mode - prod)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_prod.dart",
+        "args": [
+          "--flavor",
+          "prod"
+        ],
+        "flutterMode": "profile"
+      },
+      {
+        "name": "lets chat app dev (release mode - dev)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_dev.dart",
+        "args": [
+          "--flavor",
+          "dev"
+        ],
+        "flutterMode": "release"
+      },
+      {
+        "name": "lets chat (release mode - prod)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_prod.dart",
+        "args": [
+          "--flavor",
+          "prod"
+        ],
+        "flutterMode": "release"
+      },
+    ]
+  }
+  

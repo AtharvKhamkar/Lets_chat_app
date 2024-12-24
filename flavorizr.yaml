@@ -1,0 +1,17 @@
+flavors:
+  dev:
+    app:
+      name: "Lets Chat Dev"
+
+    android:
+      applicationId: "com.lets_chat.dev"  
+    ios:
+      bundleId: "com.lets_chat.dev"
+  prod:
+    app:
+      name: "Lets Chat"
+
+    android:
+      applicationId: "com.lets_chat.prod"
+    ios:
+      bundleId: "com.lets_chat.prod"

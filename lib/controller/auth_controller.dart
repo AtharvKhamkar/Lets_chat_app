@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/main_prod.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
 import 'package:lets_chat/repository/auth_repository.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
 
 class AuthController extends GetxController with StateMixin<dynamic> {
   final _authRepo = AuthRepository();
-  final GetIt _getIt = GetIt.instance;
   late SharedPreferenceService _sharedPref;
 
   var profile = UserDetailsModel(
@@ -50,7 +50,7 @@ class AuthController extends GetxController with StateMixin<dynamic> {
   }
 
   Future<void> initializeSharedPreferences() async {
-    _sharedPref = await _getIt.getAsync<SharedPreferenceService>();
+    _sharedPref = await getIt.getAsync<SharedPreferenceService>();
   }
 
   void register() async {
