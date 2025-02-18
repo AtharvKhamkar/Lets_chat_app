@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/constants/constants.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
+import 'package:lets_chat/services/app_dialog_handler_service.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
 import 'package:lets_chat/utils/colors.dart';
@@ -61,6 +63,7 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> initializeRoom(String userId, String receiverId) async {
     final result = chatController.createChatRoom(userId, receiverId);
     _roomId = UtilFunction().generateChatID(uid1: userId, uid2: receiverId);
+    Constants.kCurrentRoomId = _roomId ?? '';
   }
 
   void _onSendPressed(types.PartialText message) async {
@@ -79,6 +82,11 @@ class _ChatPageState extends State<ChatPage> {
         appBar: CustomAppBar(
           title: widget.receiverUser.username!,
           actions: [
+            IconButton(
+                onPressed: () {
+                  AppDialogHandlerService.chooseAttachmentTypeDialog();
+                },
+                icon: const Icon(Icons.plus_one)),
             IconButton(
               onPressed: () {
                 chatController.sendImageMessage(_roomId!, _userId!);
@@ -104,15 +112,16 @@ class _ChatPageState extends State<ChatPage> {
                   onSendPressed: _onSendPressed,
                   onAttachmentPressed: () {
                     //for sending image
-                    chatController.sendImageMessage(_roomId!, _userId!);
+                    // chatController.sendImageMessage(_roomId!, _userId!);
+                    AppDialogHandlerService.chooseAttachmentTypeDialog();
 
                     //For sending file
                     // chatController.sendFileMessage(_roomId!, _userId!);
                   },
                   user: types.User(id: _userId!),
-                  theme: DefaultChatTheme(
+                  theme: const DefaultChatTheme(
                       backgroundColor: AppColors.primaryColor,
-                      inputBackgroundColor: Colors.indigo.shade400),
+                      inputBackgroundColor: AppColors.secondaryColor),
                   inputOptions: InputOptions(onTextChanged: (text) {
                     debugPrint(
                         'User started typing :: length of the text is ${text.length}');

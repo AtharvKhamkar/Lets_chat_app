@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lets_chat/constants/constants.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
 import 'package:lets_chat/repository/user_repository.dart';
 import 'package:lets_chat/utils/colors.dart';
@@ -147,5 +149,64 @@ class AppDialogHandlerService {
         barrierDismissible: true,
         transitionDuration: const Duration(milliseconds: 400),
         transitionCurve: Curves.easeInOut);
+  }
+
+  static void chooseAttachmentTypeDialog() {
+    Get.bottomSheet(
+      backgroundColor: AppColors.primaryColor,
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          itemCount: Constants.kAttachmentTypesOptions.length,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              childAspectRatio: 1,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16),
+          itemBuilder: (context, index) {
+            Map<String, dynamic> option =
+                Constants.kAttachmentTypesOptions[index];
+            return buildSingleAttachmentItem(
+                assetPath: option['assetPath'] ?? '',
+                title: option['title'] ?? '',
+                onTap: option['action']);
+          },
+        ),
+      ),
+    );
+  }
+
+  static Widget buildSingleAttachmentItem(
+      {required String assetPath,
+      required String title,
+      required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: AppColors.secondaryColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16),
+              ),
+            ),
+            child: SvgPicture.asset(
+              assetPath,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(title)
+        ],
+      ),
+    );
   }
 }

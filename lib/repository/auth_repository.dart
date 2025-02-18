@@ -25,7 +25,7 @@ class AuthRepository {
     }
   }
 
-  Future? loginUser(String email, String password) async {
+  Future<UserDetailsModel?> loginUser(String email, String password) async {
     try {
       Map<String, dynamic> loginData = {
         "email": email.trim(),
@@ -41,5 +41,6 @@ class AuthRepository {
     } catch (e) {
       debugPrint('$e');
     }
+    return null;
   }
 }

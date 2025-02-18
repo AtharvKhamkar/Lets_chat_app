@@ -74,7 +74,7 @@ class ChatController extends GetxController with StateMixin<dynamic> {
   }
 
   void processMessage(List<Message> chatHistory) {
-    for (var messageData in chatHistory) {
+    for (Message messageData in chatHistory) {
       //Only add new message in the message List if the message is not present in the previous message list.
       if (!messages.any((msg) => msg.id == messageData.id)) {
         debugPrint(

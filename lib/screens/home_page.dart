@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/constants/asset_path.dart';
 import 'package:lets_chat/controller/chat_controller.dart';
 import 'package:lets_chat/controller/user_controller.dart';
 import 'package:lets_chat/modals/user_modal.dart';
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {},
             icon: SvgPicture.asset(
-              'assets/Images/message_plus.svg',
+              AssetPath.kMessagePlus,
               height: 30,
               width: 30,
             ),
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {},
             icon: SvgPicture.asset(
-              'assets/Images/message_read.svg',
+              AssetPath.kMessageRead,
               height: 30,
               width: 30,
             ),

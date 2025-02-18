@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:lets_chat/constants/asset_path.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/validation.dart';
@@ -36,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           SvgPicture.asset(
-                            'assets/Images/registration.svg',
+                            AssetPath.kRegistration,
                             height: Get.height * 0.25,
                           ),
                           Form(

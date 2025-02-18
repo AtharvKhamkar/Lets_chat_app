@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lets_chat/constants/constants.dart';
 import 'package:lets_chat/main_prod.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
 import 'package:lets_chat/repository/auth_repository.dart';
@@ -81,11 +82,12 @@ class AuthController extends GetxController with StateMixin<dynamic> {
     isLoading(true);
     update();
 
-    final result = await _authRepo.loginUser(
+    UserDetailsModel? result = await _authRepo.loginUser(
         emailController.text, passwordController.text);
 
     if (result != null) {
       profile(result);
+      Constants.kCurrentUserId = result.id ?? '';
       bool isPrefProcessSuccess = await _sharedPref.saveUserCredentials(
           emailController.text, passwordController.text, profile.value.id!);
 
