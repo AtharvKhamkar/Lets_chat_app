@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:lets_chat/controller/chat_controller.dart';
+import 'package:lets_chat/screens/google_map_screen.dart';
 
 class AttachmentActions {
   static void onGalleryOptionTap(String roomId, String userId) async {
@@ -15,7 +16,7 @@ class AttachmentActions {
   }
 
   static void onLocationOptionTap() {
-    print('Location option tapped');
+    Get.to(() => const GoogleMapScreen());
   }
 
   static void onDocumentOptionTap() {
