@@ -80,18 +80,21 @@ class AppDialogHandlerService {
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(
+                                  TextSpan(
                                     text: 'Username : ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: AppColors.primaryColor),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                   TextSpan(
                                     text: userDetails.username,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                 ],
                               ),
@@ -99,18 +102,21 @@ class AppDialogHandlerService {
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(
+                                  TextSpan(
                                     text: 'Email : ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: AppColors.primaryColor),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                   TextSpan(
                                     text: userDetails.email,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                 ],
                               ),
@@ -118,18 +124,21 @@ class AppDialogHandlerService {
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  const TextSpan(
+                                  TextSpan(
                                     text: 'Joined from : ',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: AppColors.primaryColor),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                   TextSpan(
                                     text: formattedLocalCreatedTime,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(
+                                            color: AppColors.primaryColor),
                                   ),
                                 ],
                               ),
@@ -168,7 +177,7 @@ class AppDialogHandlerService {
           itemBuilder: (context, index) {
             Map<String, dynamic> option =
                 Constants.kAttachmentTypesOptions[index];
-            return buildSingleAttachmentItem(
+            return buildSingleAttachmentItem(context,
                 assetPath: option['assetPath'] ?? '',
                 title: option['title'] ?? '',
                 onTap: option['action']);
@@ -178,7 +187,7 @@ class AppDialogHandlerService {
     );
   }
 
-  static Widget buildSingleAttachmentItem(
+  static Widget buildSingleAttachmentItem(BuildContext context,
       {required String assetPath,
       required String title,
       required VoidCallback onTap}) {
@@ -204,7 +213,10 @@ class AppDialogHandlerService {
           const SizedBox(
             height: 8,
           ),
-          Text(title)
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyLarge,
+          )
         ],
       ),
     );

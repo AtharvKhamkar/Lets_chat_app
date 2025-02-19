@@ -84,10 +84,10 @@ class _HomePageState extends State<HomePage> {
             }
 
             if (controller.userList.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   'No users found',
-                  style: TextStyles.defaultText,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               );
             }
@@ -138,10 +138,8 @@ class ChatTile extends StatelessWidget {
                   binding: ChatBinding());
             },
             child: SizedBox(
-              child: Text(
-                receiverUser.username!,
-                style: TextStyles.headLine2,
-              ),
+              child: Text(receiverUser.username!,
+                  style: Theme.of(context).textTheme.displaySmall),
             ),
           )
         ],

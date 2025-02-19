@@ -119,9 +119,17 @@ class _ChatPageState extends State<ChatPage> {
                     // chatController.sendFileMessage(_roomId!, _userId!);
                   },
                   user: types.User(id: _userId!),
-                  theme: const DefaultChatTheme(
+                  theme: DefaultChatTheme(
                       backgroundColor: AppColors.primaryColor,
-                      inputBackgroundColor: AppColors.secondaryColor),
+                      inputBackgroundColor: AppColors.secondaryColor,
+                      receivedMessageBodyTextStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: AppColors.primaryColor),
+                      sentMessageBodyTextStyle:
+                          Theme.of(context).textTheme.titleMedium!,
+                      emptyChatPlaceholderTextStyle:
+                          Theme.of(context).textTheme.titleMedium!),
                   inputOptions: InputOptions(onTextChanged: (text) {
                     debugPrint(
                         'User started typing :: length of the text is ${text.length}');

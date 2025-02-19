@@ -70,10 +70,25 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: SF_PRO_DISPLAY_MEDIUM
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Medium.otf
+    - family: SF_PRO_DISPLAY_REGULAR
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Regular.otf
+    - family: SF_COMP_DISPLAY_MEDIUM
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Medium.otf
+    - family: SF_COMP_DISPLAY_REGULAR
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Regular.otf
+      
 
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/Images/
+    - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:lets_chat/constants/asset_path.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
+import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/validation.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
@@ -79,18 +80,24 @@ class _LoginPageState extends State<LoginPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text("Don't have an account? ",
-                                        style: TextStyles.textFieldHintText),
+                                    Text(
+                                      "Don't have an account? ",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              color: AppColors
+                                                  .textFieldTitleColor),
+                                    ),
                                     GestureDetector(
                                       onTap: () {
                                         Get.toNamed('/registration');
                                       },
                                       child: Text(
                                         'Sign up',
-                                        style: TextStyles.textFieldHintText
-                                            .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
                                       ),
                                     )
                                   ],

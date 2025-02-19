@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:lets_chat/Routes/app_router_constant.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/screens/home_page.dart';
 import 'package:lets_chat/screens/login_page.dart';
@@ -7,21 +8,23 @@ import 'package:lets_chat/screens/splash_page.dart';
 
 class AppRouter {
   AppRouter._();
-  static const initial = '/splash-screen';
+  static const initial = AppRouterConstant.kSplashScreen;
   static final routes = [
     GetPage(
-        name: '/splash-screen',
+        name: AppRouterConstant.kSplashScreen,
         page: () => const SplashPage(),
         binding: AuthBinding()),
     GetPage(
-        name: '/home-screen',
+        name: AppRouterConstant.kHomeScreen,
         page: () => const HomePage(),
         binding: AuthBinding()),
     GetPage(
-        name: '/registration',
+        name: AppRouterConstant.kRegistrationScreen,
         page: () => const RegistrationPage(),
         binding: AuthBinding()),
     GetPage(
-        name: '/login', page: () => const LoginPage(), binding: AuthBinding()),
+        name: AppRouterConstant.kLoginScreen,
+        page: () => const LoginPage(),
+        binding: AuthBinding()),
   ];
 }

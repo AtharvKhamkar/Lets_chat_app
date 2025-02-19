@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/utils/text_styles.dart';
 
 class CustomInputField extends StatefulWidget {
@@ -210,7 +211,10 @@ class _CustomInputField2State extends State<CustomInputField2> {
           ),
           Text(
             widget.label,
-            style: TextStyles.textFieldTitles,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: AppColors.textFieldTitleColor),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -233,7 +237,10 @@ class _CustomInputField2State extends State<CustomInputField2> {
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.transparent,
-                  hintStyle: TextStyles.textFieldHintText,
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: AppColors.textFieldTitleColor),
                   border: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.transparent),
                     borderRadius: BorderRadius.circular(10.0),
@@ -250,9 +257,13 @@ class _CustomInputField2State extends State<CustomInputField2> {
                       borderRadius: BorderRadius.circular(10.0)),
                   errorText:
                       widget.errorMessage.isEmpty ? null : widget.errorMessage,
-                  errorStyle: const TextStyle(color: Colors.redAccent),
+                  errorStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: AppColors.errorMessageColor),
                   focusedErrorBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.redAccent),
+                    borderSide:
+                        const BorderSide(color: AppColors.errorMessageColor),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   hintText: widget.hintText,

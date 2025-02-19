@@ -37,7 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyles.headLine1),
+          Text(title, style: Theme.of(context).textTheme.displayLarge),
           textWidget ?? const SizedBox.shrink()
         ],
       ),
