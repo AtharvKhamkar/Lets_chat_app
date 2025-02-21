@@ -168,10 +168,10 @@ class AppDialogHandlerService {
         child: GridView.builder(
           shrinkWrap: true,
           itemCount: Constants.kAttachmentTypesOptions.length,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
-              childAspectRatio: 1,
+              childAspectRatio: 0.8,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16),
           itemBuilder: (context, index) {
@@ -196,6 +196,7 @@ class AppDialogHandlerService {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 8,
         children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -210,9 +211,6 @@ class AppDialogHandlerService {
               color: Colors.white,
             ),
           ),
-          const SizedBox(
-            height: 8,
-          ),
           Text(
             title,
             style: Theme.of(context).textTheme.bodyLarge,
@@ -220,5 +218,22 @@ class AppDialogHandlerService {
         ],
       ),
     );
+  }
+
+  static Future<bool> customPermissionHandlerDialog(
+      {required String title,
+      required String description,
+      required String confirmText,
+      String? cancelText,
+      required void Function()? onConfirm,
+      required void Function()? onCancel}) async {
+    return await Get.defaultDialog<bool>(
+            title: title,
+            middleText: description,
+            textConfirm: confirmText,
+            textCancel: cancelText ?? 'Cancel',
+            onConfirm: onConfirm,
+            onCancel: onCancel) ??
+        false;
   }
 }

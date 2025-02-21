@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
+import 'package:lets_chat/Routes/app_router_constant.dart';
 import 'package:lets_chat/controller/chat_controller.dart';
-import 'package:lets_chat/screens/google_map_screen.dart';
+import 'package:lets_chat/screens/location_share_screen.dart';
 
 class AttachmentActions {
   static void onGalleryOptionTap(String roomId, String userId) async {
@@ -16,7 +17,7 @@ class AttachmentActions {
   }
 
   static void onLocationOptionTap() {
-    Get.to(() => const GoogleMapScreen());
+    Get.toNamed(AppRouterConstant.kLocationSharing);
   }
 
   static void onDocumentOptionTap() {
