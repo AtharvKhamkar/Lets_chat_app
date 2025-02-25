@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lets_chat/controller/location_controller.dart';
+import 'package:lets_chat/repository/location_repository.dart';
 import 'package:lets_chat/services/location_service.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 
@@ -18,12 +19,12 @@ class _LocationShareScreenState extends State<LocationShareScreen> {
   final LocationController controller = Get.put(LocationController());
 
   LocationService locationService = LocationService();
+  final locationRepository = LocationRepository();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    locationService.checkLocationPermissions();
     controller.startLocationSharing();
     // locationService.startMonitoringLocationPermission();
   }
@@ -31,7 +32,20 @@ class _LocationShareScreenState extends State<LocationShareScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Google Maps'),
+      appBar: CustomAppBar(
+        title: 'Google Maps',
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await locationRepository.startLocationSharing(
+                    '670ae17b15ebeb0c34ffeb04',
+                    '670ae17b15ebeb0c34ffeb04670ae4ba15ebeb0c34ffeb07',
+                    131313.5,
+                    121212.5);
+              },
+              icon: const Icon(Icons.plus_one))
+        ],
+      ),
       body: Obx(
         () {
           if (controller.currentLocation.value == null) {

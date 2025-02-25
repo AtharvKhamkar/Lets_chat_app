@@ -61,6 +61,10 @@ class ChatService {
       typingStream.value = data;
     });
 
+    socket!.on('shareLocation', (data) {
+      print('Received data from SHARE LOCATION EVENT is $data');
+    });
+
     socket!.onConnectError((error) {
       print('Connection Error: $error');
     });
@@ -95,6 +99,20 @@ class ChatService {
     if (socket != null) {
       debugPrint('Before the join room event');
       socket!.emit('join', {'roomId': roomId, 'userId': userId});
+    }
+  }
+
+  Future<void> shareLocationSharingEvent(
+      String roomId, String senderId, double latitude, double longitude) async {
+    if (socket != null) {
+      print(
+          'updating latest location latitude $latitude , longitude $longitude');
+      socket!.emit('shareLocation', {
+        'roomId': roomId,
+        'senderId': senderId,
+        'latitude': latitude,
+        'longitude': longitude
+      });
     }
   }
 
