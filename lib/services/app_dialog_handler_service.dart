@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_chat/constants/constants.dart';
+import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
 import 'package:lets_chat/repository/user_repository.dart';
 import 'package:lets_chat/utils/colors.dart';
@@ -235,5 +236,77 @@ class AppDialogHandlerService {
             onConfirm: onConfirm,
             onCancel: onCancel) ??
         false;
+  }
+
+  static void showNearByPlacesBottomSheet(BuildContext context, List<NearbyPlacesModel> nearbyPlacesList) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.4,
+          minChildSize: 0.4,
+          maxChildSize: 0.8,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'Nearby Places',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: AppColors.textFieldTitleColor),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: nearbyPlacesList.length,
+                      itemBuilder: (context, index) {
+                        final NearbyPlacesModel nearByPlace =
+                            nearbyPlacesList[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppColors.secondaryColor,
+                              child: Image.network(
+                                  color: AppColors.primaryColor,
+                                  height: 20,
+                                  width: 20,
+                                  nearByPlace.icon ?? ''),
+                            ),
+                            title: Text(
+                              nearByPlace.name ?? 'N/A',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: AppColors.primaryTextColor),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

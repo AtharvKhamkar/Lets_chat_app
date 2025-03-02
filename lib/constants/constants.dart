@@ -8,6 +8,7 @@ class Constants {
   static const BASE_ANDROID_CHAT_LOCAL_URL = 'ws://10.0.2.2:2525';
   static String kCurrentUserId = '';
   static String kCurrentRoomId = '';
+  static String kGoogleMapsApiKey = 'AIzaSyBJoSmyBE4NkgE7-jb1wqiK5Da_KTZTl5M';
 
   static final List<Map<String, dynamic>> kAttachmentTypesOptions = [
     {

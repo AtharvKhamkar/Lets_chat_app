@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lets_chat/constants/constants.dart';
 import 'package:lets_chat/modals/api_response_model.dart';
 import 'package:lets_chat/modals/location_room_details_model.dart';
+import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/services/api_client_service.dart';
 
 class LocationRepository {
@@ -28,5 +30,35 @@ class LocationRepository {
           'Error caught in the startLocationSharing :: location_repository :: ${e.toString()}');
     }
     return null;
+  }
+
+  Future<List<NearbyPlacesModel>> getNearByLocations(
+      {required double latitude,
+      required double longitude,
+      int? radius = 1500}) async {
+    try {
+      Map<String, dynamic> queryParameters = {
+        'location': '$latitude,$longitude',
+        'radius': radius,
+        'key': Constants.kGoogleMapsApiKey
+      };
+      final response = await apiClient
+          .chooseApiClient(useGoogleMaps: true)
+          .get('/place/nearbysearch/json', queryParameters: queryParameters);
+
+      final locationsList = await response.data['results'];
+
+      print('nearby locations result before parsing is $locationsList');
+
+      if (locationsList != null && locationsList is List) {
+        return locationsList
+            .map((location) => NearbyPlacesModel.fromJson(location))
+            .toList();
+      }
+    } catch (e) {
+      debugPrint(
+          'Error caught in the getNearByLocations :: location_repository :: ${e.toString()}');
+    }
+    return [];
   }
 }

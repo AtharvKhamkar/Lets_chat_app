@@ -1,10 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_chat/constants/app_config.dart';
-import 'package:lets_chat/constants/app_config_dev.dart';
-import 'package:lets_chat/constants/app_config_prod.dart';
-import 'package:lets_chat/flavors.dart';
-
 import 'package:lets_chat/main_prod.dart';
 
 class ApiClientService {
@@ -18,9 +14,10 @@ class ApiClientService {
     _initialize();
   }
 
-  final Dio _dio = Dio();
-
   AppConfig appConfig = getIt<AppConfig>();
+
+  final Dio _dio = Dio();
+  final Dio _googleMapsDio = Dio();
 
   Map<String, String> _headers() {
     Map<String, String> map = {};
@@ -30,6 +27,11 @@ class ApiClientService {
 
   void _initialize() {
     _dio.options.baseUrl = appConfig.BASE_URL;
+    _googleMapsDio.options.baseUrl = appConfig.BASE_GOOGLE_MAPS_URL;
+  }
+
+  Dio chooseApiClient({bool useGoogleMaps = false}) {
+    return useGoogleMaps ? _googleMapsDio : _dio;
   }
 
   Future<dynamic> get(String endpoint, {Map<String, dynamic>? headers}) async {

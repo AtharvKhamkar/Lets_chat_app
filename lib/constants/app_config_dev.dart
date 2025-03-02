@@ -29,4 +29,7 @@ class AppConfigDev implements AppConfig {
       throw UnsupportedError('Unsupported platform');
     }
   }
+
+  @override
+  String get BASE_GOOGLE_MAPS_URL => 'https://maps.googleapis.com/maps/api';
 }

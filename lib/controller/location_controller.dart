@@ -5,16 +5,21 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lets_chat/modals/nearby_places_model.dart';
+import 'package:lets_chat/repository/location_repository.dart';
 import 'package:lets_chat/services/chat_service.dart';
 import 'package:lets_chat/services/location_service.dart';
 
 class LocationController extends GetxController {
   final LocationService locationService = LocationService();
+  final LocationRepository locationRepository = LocationRepository();
   final GetIt _getIt = GetIt.instance;
   late ChatService _chatService;
 
+  RxBool isLoading = false.obs;
   Rx<LatLng?> currentLocation = Rx<LatLng?>(null);
   RxSet<Marker> markers = <Marker>{}.obs;
+  RxList<NearbyPlacesModel> nearByPlacesList = <NearbyPlacesModel>[].obs;
 
   late GoogleMapController googleMapController;
   StreamSubscription<Position>? positionStram;
@@ -100,6 +105,22 @@ class LocationController extends GetxController {
 
   void updateMapController(GoogleMapController controller) {
     googleMapController = controller;
+  }
+
+  void storeNearByPlaces(
+      {required double latitude, required double longitude}) async {
+    try {
+      isLoading.value = true;
+      nearByPlacesList.clear();
+
+      nearByPlacesList.value = await locationRepository.getNearByLocations(
+          latitude: latitude, longitude: longitude);
+
+      isLoading.value = false;
+    } catch (e) {
+      debugPrint(
+          'Error caught in storeNearByPlaces :: location_controller :: ${e.toString()}');
+    }
   }
 
   @override

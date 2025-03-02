@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lets_chat/controller/location_controller.dart';
+import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/repository/location_repository.dart';
+import 'package:lets_chat/services/app_dialog_handler_service.dart';
 import 'package:lets_chat/services/location_service.dart';
+import 'package:lets_chat/utils/colors.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 
 class LocationShareScreen extends StatefulWidget {
@@ -16,7 +19,7 @@ class LocationShareScreen extends StatefulWidget {
 }
 
 class _LocationShareScreenState extends State<LocationShareScreen> {
-  final LocationController controller = Get.put(LocationController());
+  final LocationController locationController = Get.put(LocationController());
 
   LocationService locationService = LocationService();
   final locationRepository = LocationRepository();
@@ -25,8 +28,17 @@ class _LocationShareScreenState extends State<LocationShareScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller.startLocationSharing();
+    locationController.startLocationSharing();
     // locationService.startMonitoringLocationPermission();
+    locationController.storeNearByPlaces(
+        latitude: 37.3326595, longitude: -122.0091283);
+    Future.delayed(
+      const Duration(seconds: 5),
+      () {
+        AppDialogHandlerService.showNearByPlacesBottomSheet(
+            context, locationController.nearByPlacesList);
+      },
+    );
   }
 
   @override
@@ -37,30 +49,34 @@ class _LocationShareScreenState extends State<LocationShareScreen> {
         actions: [
           IconButton(
               onPressed: () async {
-                await locationRepository.startLocationSharing(
-                    '670ae17b15ebeb0c34ffeb04',
-                    '670ae17b15ebeb0c34ffeb04670ae4ba15ebeb0c34ffeb07',
-                    131313.5,
-                    121212.5);
+                await locationRepository.getNearByLocations(
+                    latitude: 37.3326595, longitude: -122.0091283);
               },
               icon: const Icon(Icons.plus_one))
         ],
       ),
-      body: Obx(
-        () {
-          if (controller.currentLocation.value == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-                target: controller.currentLocation.value!, zoom: 15),
-            onMapCreated: controller.updateMapController,
-            markers: controller.markers,
-          );
-        },
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Obx(
+              () {
+                if (locationController.currentLocation.value == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                      target: locationController.currentLocation.value!,
+                      zoom: 15),
+                  onMapCreated: locationController.updateMapController,
+                  markers: locationController.markers,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
