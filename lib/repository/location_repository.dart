@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lets_chat/constants/constants.dart';
-import 'package:lets_chat/modals/api_response_model.dart';
 import 'package:lets_chat/modals/location_room_details_model.dart';
 import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/services/api_client_service.dart';

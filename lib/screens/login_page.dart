@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:lets_chat/constants/asset_path.dart';
 import 'package:lets_chat/controller/auth_controller.dart';
 import 'package:lets_chat/utils/colors.dart';
-import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/utils/validation.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 import 'package:lets_chat/widgets/custom_form_button.dart';

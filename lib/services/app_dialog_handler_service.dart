@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lets_chat/constants/asset_path.dart';
 import 'package:lets_chat/constants/constants.dart';
 import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/modals/user_details_model.dart';
@@ -238,7 +239,8 @@ class AppDialogHandlerService {
         false;
   }
 
-  static void showNearByPlacesBottomSheet(BuildContext context, List<NearbyPlacesModel> nearbyPlacesList) {
+  static void showNearByPlacesBottomSheet(
+      BuildContext context, List<NearbyPlacesModel> nearbyPlacesList) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -254,59 +256,107 @@ class AppDialogHandlerService {
             return Container(
               decoration: const BoxDecoration(
                 color: AppColors.primaryColor,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
+                // borderRadius: BorderRadius.vertical(
+                //   top: Radius.circular(20),
+                // ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 8,
+                  children: [
+                    const NearbyPlacesTile(
+                        assetPath: AssetPath.kShareLocation,
+                        title: 'Share live location'),
+                    const Divider(
+                      thickness: 0.1,
+                      color: AppColors.textFieldTitleColor,
+                    ),
+                    Text(
                       'Nearby Places',
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
                           .copyWith(color: AppColors.textFieldTitleColor),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: nearbyPlacesList.length,
-                      itemBuilder: (context, index) {
-                        final NearbyPlacesModel nearByPlace =
-                            nearbyPlacesList[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: AppColors.secondaryColor,
-                              child: Image.network(
-                                  color: AppColors.primaryColor,
-                                  height: 20,
-                                  width: 20,
-                                  nearByPlace.icon ?? ''),
-                            ),
-                            title: Text(
-                              nearByPlace.name ?? 'N/A',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(color: AppColors.primaryTextColor),
-                            ),
-                          ),
-                        );
-                      },
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: nearbyPlacesList.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return const NearbyPlacesTile(
+                                assetPath: AssetPath.kCurrentLocation,
+                                title: 'Send your current location');
+                          }
+                          final NearbyPlacesModel nearByPlace =
+                              nearbyPlacesList[index - 1];
+                          return NearbyPlacesTile(
+                            assetPath: nearByPlace.icon ?? '',
+                            title: nearByPlace.name ?? 'N/A',
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
         );
       },
+    );
+  }
+}
+
+class NearbyPlacesTile extends StatelessWidget {
+  const NearbyPlacesTile({
+    super.key,
+    required this.assetPath,
+    required this.title,
+  });
+
+  final String assetPath;
+  final String title;
+
+  bool isNetworkImage(String path) {
+    return Uri.tryParse(path)?.hasAbsolutePath ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: CircleAvatar(
+            radius: 20,
+            backgroundColor: AppColors.secondaryColor,
+            child: isNetworkImage(assetPath)
+                ? Image.network(
+                    color: AppColors.primaryColor,
+                    height: 20,
+                    width: 20,
+                    assetPath,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.error,
+                      color: AppColors.textFieldTitleColor,
+                    ),
+                  )
+                : Image.asset(
+                    color: AppColors.primaryColor,
+                    height: 20,
+                    width: 20,
+                    assetPath)),
+        title: Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .copyWith(color: AppColors.textFieldTitleColor),
+        ),
+      ),
     );
   }
 }

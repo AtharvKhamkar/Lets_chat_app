@@ -7,4 +7,6 @@ class AssetPath {
   static const String kMessageRead = 'assets/Images/message_read.svg';
   static const String kMessenger = 'assets/Images/messenger.png';
   static const String kRegistration = 'assets/Images/registration.svg';
+  static const String kShareLocation = 'assets/Images/share_location.png';
+  static const String kCurrentLocation = 'assets/Images/current_location.png';
 }

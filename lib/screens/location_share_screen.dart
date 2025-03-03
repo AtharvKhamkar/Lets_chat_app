@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lets_chat/controller/location_controller.dart';
-import 'package:lets_chat/modals/nearby_places_model.dart';
 import 'package:lets_chat/repository/location_repository.dart';
 import 'package:lets_chat/services/app_dialog_handler_service.dart';
 import 'package:lets_chat/services/location_service.dart';
@@ -77,6 +76,21 @@ class _LocationShareScreenState extends State<LocationShareScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: Transform.translate(
+        offset: const Offset(-40, 0),
+        child: FloatingActionButton.extended(
+          isExtended: true,
+          backgroundColor: AppColors.secondaryTextColor,
+          onPressed: () {
+            AppDialogHandlerService.showNearByPlacesBottomSheet(
+                context, locationController.nearByPlacesList);
+          },
+          label: Text(
+            'Nearby Places',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
       ),
     );
   }

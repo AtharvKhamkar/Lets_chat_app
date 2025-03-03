@@ -9,7 +9,6 @@ import 'package:lets_chat/modals/user_modal.dart';
 import 'package:lets_chat/screens/chat_page.dart';
 import 'package:lets_chat/services/app_dialog_handler_service.dart';
 import 'package:lets_chat/services/shared_preference_service.dart';
-import 'package:lets_chat/utils/text_styles.dart';
 import 'package:lets_chat/widgets/custom_appbar.dart';
 import 'package:lets_chat/widgets/custom_padding.dart';
 
